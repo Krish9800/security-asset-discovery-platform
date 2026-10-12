@@ -55,6 +55,7 @@ select = [
 ]
 ignore = [
     "E501", # line-too-long handled by formatter
+    "B008", # function call in argument defaults (Typer and FastAPI standard pattern)
 ]
 
 [tool.ruff.format]
