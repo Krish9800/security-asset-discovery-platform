@@ -1,0 +1,26 @@
+services:
+  asset-discovery-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: security-asset-discovery-platform
+    ports:
+      - "8000:8000"
+    environment:
+      - ASSET_DISCOVERY_ENVIRONMENT=production
+      - ASSET_DISCOVERY_HOST=0.0.0.0
+      - ASSET_DISCOVERY_PORT=8000
+      - ASSET_DISCOVERY_DB_PATH=/app/data/asset_discovery.db
+    volumes:
+      - asset-data:/app/data
+    restart: unless-stopped
+    read_only: false
+    user: "10001:10001"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  asset-data:
+    driver: local
