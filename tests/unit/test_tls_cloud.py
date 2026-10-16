@@ -1,6 +1,7 @@
 """Unit tests for TLS certificate inspector and cloud shadow IT detector."""
 
 from datetime import UTC, datetime, timedelta
+from unittest.mock import patch
 
 import pytest
 from cryptography import x509
@@ -135,5 +136,6 @@ def test_cloud_provider_and_storage_bucket_detection() -> None:
 async def test_tls_inspector_unreachable_host() -> None:
     """Verify unreachable host returns None without unhandled exception."""
     inspector = TlsCertificateInspector(handshake_timeout_seconds=0.1)
-    res = await inspector.inspect_certificate("192.0.2.1", port=443)
-    assert res is None
+    with patch.object(inspector, "_sync_inspect_tls", side_effect=TimeoutError()):
+        res = await inspector.inspect_certificate("192.0.2.1", port=443)
+        assert res is None
